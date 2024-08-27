@@ -194,6 +194,8 @@ defmodule Explorer.Backend.Series do
   @callback qcut(s, [float()], [String.t()] | nil, String.t() | nil, String.t() | nil) ::
               df
 
+  @callback talib_rsi(s, integer()) :: s
+
   # Rolling
 
   @callback window_sum(

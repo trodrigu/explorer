@@ -14,6 +14,9 @@ use polars_ops::chunked_array::cov::{cov, pearson_corr};
 use polars_ops::prelude::peaks::*;
 use rustler::{Binary, Encoder, Env, Term};
 
+use talib::common::{TimePeriodKwargs, ta_initialize, ta_shutdown};
+use talib::momentum::ta_rsi;
+
 pub mod from_list;
 pub mod log;
 
@@ -198,6 +201,36 @@ pub fn s_unordered_distinct(series: ExSeries) -> Result<ExSeries, ExplorerError>
 pub fn s_frequencies(series: ExSeries) -> Result<ExDataFrame, ExplorerError> {
     let df = series.value_counts(true, true, "counts".to_string(), false)?;
     Ok(ExDataFrame::new(df))
+}
+
+#[rustler::nif(schedule = "DirtyCpu")]
+pub fn s_talib_rsi(series: ExSeries, timeperiod: u32) -> Result<ExSeries, ExplorerError> {
+    let series = series.clone_inner();
+
+    let vec_f64: Vec<f64> = series.f64()?.into_iter().map(|opt_val| opt_val.unwrap_or(f64::NAN)).collect();
+    
+    // Initialize TA-Lib
+    let _ = ta_initialize();
+
+    let kwargs = TimePeriodKwargs { timeperiod: timeperiod as i32 };
+    
+    // Calculate RSI
+    let rsi_result = ta_rsi(vec_f64.as_ptr(), vec_f64.len(), &kwargs);
+    
+    // Shutdown TA-Lib
+    let _ = ta_shutdown();
+
+    match rsi_result {
+        Ok(rsi_values) => {
+            // Pad the beginning of the RSI values with NaN
+            let padding = vec![f64::NAN; vec_f64.len() - rsi_values.len()];
+            let full_rsi = [padding, rsi_values].concat();
+            
+            let rsi_series = Series::new("rsi", full_rsi);
+            Ok(ExSeries::new(rsi_series))
+        },
+        Err(_) => Err(ExplorerError::Other("TA-Lib RSI calculation failed".into())),
+    }
 }
 
 #[rustler::nif(schedule = "DirtyCpu")]
