@@ -15,7 +15,7 @@ use polars_ops::prelude::peaks::*;
 use rustler::{Binary, Encoder, Env, Term};
 
 use talib::common::{TimePeriodKwargs, ta_initialize, ta_shutdown};
-use talib::momentum::ta_rsi;
+use talib::momentum::{ta_rsi, ta_macd, MacdKwargs};
 
 pub mod from_list;
 pub mod log;
@@ -230,6 +230,43 @@ pub fn s_talib_rsi(series: ExSeries, timeperiod: u32) -> Result<ExSeries, Explor
             Ok(ExSeries::new(rsi_series))
         },
         Err(_) => Err(ExplorerError::Other("TA-Lib RSI calculation failed".into())),
+    }
+}
+
+#[rustler::nif(schedule = "DirtyCpu")]
+pub fn s_talib_macd(series: ExSeries, fastperiod: u32, slowperiod: u32, signalperiod: u32) -> Result<ExDataFrame, ExplorerError> {
+    let series = series.clone_inner();
+
+    let vec_f64: Vec<f64> = series.f64()?.into_iter().map(|opt_val| opt_val.unwrap_or(f64::NAN)).collect();
+
+    let _ = ta_initialize();
+
+    let macd_kwargs = MacdKwargs {
+        fastperiod: fastperiod as i32,
+        slowperiod: slowperiod as i32,
+        signalperiod: signalperiod as i32,
+    };
+
+    let macd_result = ta_macd(vec_f64.as_ptr(), vec_f64.len(), &macd_kwargs);
+
+    let _ = ta_shutdown();
+
+    match macd_result {
+        Ok((macd_values, signal_values, hist_values)) => {
+            // Pad the beginning of each series with NaN
+            let padding = vec![f64::NAN; vec_f64.len() - macd_values.len()];
+            let full_macd = [padding.clone(), macd_values].concat();
+            let full_signal = [padding.clone(), signal_values].concat();
+            let full_hist = [padding, hist_values].concat();
+            
+            let macd_series = Series::new("macd", full_macd);
+            let signal_series = Series::new("signal", full_signal);
+            let hist_series = Series::new("hist", full_hist);
+
+            let df = DataFrame::new(vec![macd_series, signal_series, hist_series])?;
+            Ok(ExDataFrame::new(df))
+        },
+        Err(_) => Err(ExplorerError::Other("TA-Lib MACD calculation failed".into())),
     }
 }
 

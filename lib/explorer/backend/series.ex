@@ -195,6 +195,7 @@ defmodule Explorer.Backend.Series do
               df
 
   @callback talib_rsi(s, integer()) :: s
+  @callback talib_macd(s, integer(), integer(), integer()) :: s
 
   # Rolling
 
