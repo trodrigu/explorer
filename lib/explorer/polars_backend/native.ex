@@ -6,7 +6,7 @@ defmodule Explorer.PolarsBackend.Native do
   github_url = mix_config[:package][:links]["GitHub"]
   # Since Rustler 0.27.0, we need to change manually the mode for each env.
   # We want "debug" in dev and test because it's faster to compile.
-  mode = if Mix.env() in [:dev, :test], do: :debug, else: :release
+  mode = :debug
 
   use_legacy =
     Application.compile_env(
@@ -171,6 +171,7 @@ defmodule Explorer.PolarsBackend.Native do
   def df_width(_df), do: err()
   def df_nil_count(_df), do: err()
   def df_re_dtype(_pattern), do: err()
+  def df_talib_cdlinvertedhammer(_df), do: err()
 
   # Expressions (for lazy queries)
   @multi_arity_expressions [slice: 2, slice: 3, log: 1, log: 2]
@@ -460,6 +461,9 @@ defmodule Explorer.PolarsBackend.Native do
   def s_field(_s, _name), do: err()
   def s_json_decode(_s, _dtype), do: err()
   def s_json_path_match(_s, _json_path), do: err()
+
+  def s_talib_rsi(_s, _period), do: err()
+  def s_talib_macd(_s, _fastperiod, _slowperiod, _signalperiod), do: err()
 
   def message_on_gc(_pid, _payload), do: err()
   def is_message_on_gc(_term), do: err()

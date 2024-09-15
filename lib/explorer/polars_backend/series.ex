@@ -556,6 +556,12 @@ defmodule Explorer.PolarsBackend.Series do
     |> Shared.create_dataframe!()
   end
 
+  @impl true
+  def talib_rsi(series, time_period), do: Shared.apply(:s_talib_rsi, [series.data, time_period])
+
+  @impl true
+  def talib_macd(series, fastperiod, slowperiod, signalperiod), do: Shared.apply(:s_talib_macd, [series.data, fastperiod, slowperiod, signalperiod])
+
   # Window
 
   @impl true

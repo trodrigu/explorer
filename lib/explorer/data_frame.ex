@@ -6212,6 +6212,25 @@ defmodule Explorer.DataFrame do
     Shared.apply_dataframe(df, :sql, [sql_string, table_name])
   end
 
+  @doc """
+  Calculates the Inverted Hammer candlestick pattern.
+
+  ## Examples
+
+      iex> df = Explorer.DataFrame.new(open: [1.0, 2.0, 3.0], high: [1.1, 2.1, 3.1], low: [0.9, 1.9, 2.9], close: [1.05, 2.05, 3.05])
+      iex> Explorer.DataFrame.talib_cdlinvertedhammer(df)
+      #Explorer.Series<
+        Polars[3]
+        i32 [0, 0, 0]
+      >
+  """
+  @doc type: :pattern
+  @spec talib_cdlinvertedhammer(df :: DataFrame.t()) :: DataFrame.t()
+  def talib_cdlinvertedhammer(%__MODULE__{} = df) do
+    Shared.apply_dataframe(df, :talib_cdlinvertedhammer, [])
+  end
+
+
   # Helpers
 
   defp backend_from_options!(opts) do

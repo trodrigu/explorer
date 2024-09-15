@@ -4839,6 +4839,9 @@ defmodule Explorer.Series do
   @doc type: :aggregation
   def count(series), do: apply_series(series, :count)
 
+  def talib_rsi(series, time_period), do: apply_series(series, :talib_rsi, [time_period])
+  def talib_macd(series, fastperiod, slowperiod, signalperiod), do: apply_series(series, :talib_macd, [fastperiod, slowperiod, signalperiod])
+
   @doc """
   Counts the number of `nil` elements in a series.
 
