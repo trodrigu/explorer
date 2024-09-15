@@ -921,6 +921,11 @@ defmodule Explorer.PolarsBackend.DataFrame do
     end
   end
 
+  @impl true
+  def talib_cdlinvertedhammer(%DataFrame{} = df) do
+    Shared.apply_dataframe(df, :df_talib_cdlinvertedhammer, [])
+  end
+
   # helpers
 
   defp pairwise(df, out_df, operation) do

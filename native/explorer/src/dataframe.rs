@@ -8,6 +8,9 @@ use crate::datatypes::ExSeriesDtype;
 use crate::ex_expr_to_exprs;
 use crate::{ExDataFrame, ExExpr, ExLazyFrame, ExSeries, ExplorerError};
 use either::Either;
+use talib::pattern::ta_cdlinvertedhammer;
+use talib::common::{ta_initialize, ta_shutdown};
+
 
 // Loads the IO functions for read/writing CSV, NDJSON, Parquet, etc.
 pub mod io;
@@ -475,3 +478,41 @@ pub fn df_re_dtype(pattern: &str) -> Result<ExSeriesDtype, ExplorerError> {
     let ex_dtype = ExSeriesDtype::try_from(s.dtype())?;
     Ok(ex_dtype)
 }
+
+#[rustler::nif(schedule = "DirtyCpu")]
+pub fn df_talib_cdlinvertedhammer(df: ExDataFrame) -> Result<ExDataFrame, ExplorerError> {
+    let df_inner = df.clone_inner();
+
+    let open = df_inner.column("open")?.f64()?;
+    let mut open_as_series = open.clone().into_series();
+    let open_ptr = open_as_series.as_single_ptr()? as *const f64;
+    let high = df_inner.column("high")?.f64()?;
+    let mut high_as_series = high.clone().into_series();
+    let high_ptr = high_as_series.as_single_ptr()? as *const f64;
+    let low = df_inner.column("low")?.f64()?;
+    let mut low_as_series = low.clone().into_series();
+    let low_ptr = low_as_series.as_single_ptr()? as *const f64;
+    let close = df_inner.column("close")?.f64()?;
+    let mut close_as_series = close.clone().into_series();
+    let close_ptr = close_as_series.as_single_ptr()? as *const f64;
+
+    let len = open.len();
+    let _ = ta_initialize();
+
+    let result = ta_cdlinvertedhammer(
+        open_ptr,
+        high_ptr,
+        low_ptr,
+        close_ptr,
+        len
+    ).unwrap();
+
+    let _ = ta_shutdown();
+
+    let result_series = Series::new("cdlinvertedhammer", result);
+    let mut new_df = df_inner.clone();
+    new_df.with_column(result_series)?;
+
+    Ok(ExDataFrame::new(new_df))
+}
+

@@ -250,6 +250,8 @@ defmodule Explorer.Backend.DataFrame do
 
   @callback sql(df, sql_string :: binary(), table_name :: binary()) :: df()
 
+  @callback talib_cdlinvertedhammer(df) :: df()
+
   # Functions
   alias Explorer.{DataFrame, Series}
 

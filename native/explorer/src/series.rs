@@ -253,7 +253,6 @@ pub fn s_talib_macd(series: ExSeries, fastperiod: u32, slowperiod: u32, signalpe
 
     match macd_result {
         Ok((macd_values, signal_values, hist_values)) => {
-            // Pad the beginning of each series with NaN
             let padding = vec![f64::NAN; vec_f64.len() - macd_values.len()];
             let full_macd = [padding.clone(), macd_values].concat();
             let full_signal = [padding.clone(), signal_values].concat();
