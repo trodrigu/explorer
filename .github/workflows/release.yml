@@ -5,16 +5,12 @@ on:
     branches:
       - main
     paths:
-      # Just run on main branch if "native" path changed.
       - "native/**"
-      # Also run if this file changes.
       - ".github/workflows/release.yml"
     tags:
-      # Tags will always run.
       - "*"
   pull_request:
     paths:
-      # In PRs we only run if this file changes.
       - ".github/workflows/release.yml"
   workflow_dispatch:
 
@@ -54,7 +50,6 @@ jobs:
       - name: Extract crate information
         shell: bash
         run: |
-          # Get the project version from mix.exs
           echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' mix.exs | head -n1)" >> $GITHUB_ENV
 
       - name: Maybe add Rust flags for compilation
@@ -67,6 +62,11 @@ jobs:
         shell: bash
         run: |
           rustup target add ${{ matrix.job.target }}
+
+      - name: Verify installed targets
+        shell: bash
+        run: |
+          rustup target list --installed
 
       - uses: Swatinem/rust-cache@v2
         with:
