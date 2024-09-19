@@ -29,7 +29,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: |
-            _build/test/lib/explorer/native/explorer
+            _build/test/lib/explorer_talib_included/native/explorer_talib_included
             ~/.cargo/bin/
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
