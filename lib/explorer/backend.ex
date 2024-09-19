@@ -40,7 +40,8 @@ defmodule Explorer.Backend do
   Gets the default backend for the current process.
   """
   def get do
-    Process.get(@backend_key) || backend!(Application.fetch_env!(:explorer_talib_included, :default_backend))
+    Process.get(@backend_key) ||
+      backend!(Application.fetch_env!(:explorer_talib_included, :default_backend))
   end
 
   ## Helpers

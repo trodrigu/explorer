@@ -6230,7 +6230,6 @@ defmodule Explorer.DataFrame do
     Shared.apply_dataframe(df, :talib_cdlinvertedhammer, [])
   end
 
-
   # Helpers
 
   defp backend_from_options!(opts) do
