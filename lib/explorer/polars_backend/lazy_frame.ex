@@ -650,4 +650,9 @@ defmodule Explorer.PolarsBackend.LazyFrame do
               "Please use Explorer.DataFrame.collect/1 and then call this function upon the resultant dataframe"
     end
   end
+
+  @impl true
+  def talib_cdlinvertedhammer(df) do
+    Shared.apply_dataframe(df, df, :lf_talib_cdlinvertedhammer, [])
+  end
 end

@@ -62,7 +62,7 @@ Inside an Elixir script or [Livebook](https://livebook.dev):
 
 ```elixir
 Mix.install([
-  {:explorer, "~> 0.9.0"}
+  {:explorer_talib_included, "~> 0.1.0"}
 ])
 ```
 
@@ -71,7 +71,7 @@ Or in the `mix.exs` file of your application:
 ```elixir
 def deps do
   [
-    {:explorer, "~> 0.9.0"}
+    {:explorer_talib_included, "~> 0.1.0"}
   ]
 end
 ```
@@ -79,7 +79,7 @@ end
 Explorer will download a precompiled version of its native code upon installation. You can force a local build by setting the environment variable `EXPLORER_BUILD=1` and including `:rustler` as a dependency:
 
 ```elixir
-  {:explorer, "~> 0.9.0", system_env: %{"EXPLORER_BUILD" => "1"}},
+  {:explorer_talib_included, "~> 0.1.0", system_env: %{"EXPLORER_BUILD" => "1"}},
   {:rustler, ">= 0.0.0"}
 ```
 
@@ -287,7 +287,7 @@ case your computer is not compatible with them, you can set an application envir
 going to be read at compile time, enabling the legacy variants of artifacts.
 
 ```elixir
-config :explorer, use_legacy_artifacts: true
+config :explorer_talib_included, use_legacy_artifacts: true
 ```
 
 If you see the error message "Illegal instruction" after your project compiles, you need to

@@ -37,7 +37,7 @@ defmodule Explorer.PolarsBackend.Shared do
     end
   end
 
-  @check_frames Application.compile_env(:explorer, :check_polars_frames, false)
+  @check_frames Application.compile_env(:explorer_talib_included, :check_polars_frames, false)
 
   # Applies to a dataframe. Expects a dataframe back.
   def apply_dataframe(%DataFrame{} = df, %DataFrame{} = out_df, fun, args) do

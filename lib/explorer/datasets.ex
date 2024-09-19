@@ -59,7 +59,7 @@ defmodule Explorer.Datasets do
   def iris, do: read_dataset!("iris")
 
   defp read_dataset!(name) do
-    key = {:explorer_datasets, name}
+    key = {:explorer_talib_included_datasets, name}
 
     # Persistent term is used as a cache, in order to avoid
     # several calls to the filesystem. This is mostly useful

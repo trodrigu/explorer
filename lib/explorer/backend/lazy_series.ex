@@ -1264,4 +1264,20 @@ defmodule Explorer.Backend.LazySeries do
     "cannot perform #{fun}/#{arity} operation on Explorer.Backend.LazySeries. " <>
       "Query operations work on lazy series and those support only a subset of series operations"
   end
+
+  @impl true
+  def talib_rsi(%Series{} = series, period) do
+    args = [lazy_series!(series), period]
+    data = new(:talib_rsi, args, {:f, 64}, aggregations?(args))
+
+    Backend.Series.new(data, {:f, 64})
+  end
+
+  @impl true
+  def talib_macd(%Series{} = series, fastperiod, slowperiod, signalperiod) do
+    args = [lazy_series!(series), fastperiod, slowperiod, signalperiod]
+    data = new(:talib_macd, args, {:f, 64}, aggregations?(args))
+
+    Backend.Series.new(data, {:f, 64})
+  end
 end

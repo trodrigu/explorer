@@ -10,7 +10,7 @@ defmodule Explorer.PolarsBackend.Native do
 
   use_legacy =
     Application.compile_env(
-      :explorer,
+      :explorer_talib_included,
       :use_legacy_artifacts,
       System.get_env("EXPLORER_USE_LEGACY_ARTIFACTS") in ["true", "1"]
     )
@@ -30,7 +30,7 @@ defmodule Explorer.PolarsBackend.Native do
   other_variants = [legacy_cpu: fn -> use_legacy end]
 
   use RustlerPrecompiled,
-    otp_app: :explorer,
+    otp_app: :explorer_talib_included,
     version: version,
     base_url: "#{github_url}/releases/download/v#{version}",
     targets: ~w(

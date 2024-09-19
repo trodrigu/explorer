@@ -12,7 +12,7 @@ defmodule Explorer.Backend do
 
       # config/runtime.exs
       import Config
-      config :explorer, default_backend: Lib.CustomBackend
+      config :explorer_talib_included, default_backend: Lib.CustomBackend
 
   """
 
@@ -33,14 +33,14 @@ defmodule Explorer.Backend do
   """
   def put(backend) do
     Process.put(@backend_key, backend!(backend)) ||
-      backend!(Application.fetch_env!(:explorer, :default_backend))
+      backend!(Application.fetch_env!(:explorer_talib_included, :default_backend))
   end
 
   @doc """
   Gets the default backend for the current process.
   """
   def get do
-    Process.get(@backend_key) || backend!(Application.fetch_env!(:explorer, :default_backend))
+    Process.get(@backend_key) || backend!(Application.fetch_env!(:explorer_talib_included, :default_backend))
   end
 
   ## Helpers

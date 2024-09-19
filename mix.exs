@@ -1,15 +1,15 @@
 defmodule Explorer.MixProject do
   use Mix.Project
 
-  @source_url "https://github.com/elixir-nx/explorer"
+  @source_url "https://github.com/trodrigu/explorer_talib_included"
   @version "0.10.0-dev"
   @dev? String.ends_with?(@version, "-dev")
   @force_build? System.get_env("EXPLORER_BUILD") in ["1", "true"]
 
   def project do
     [
-      app: :explorer,
-      name: "Explorer",
+      app: :explorer_talib_included,
+      name: "Explorer Talib Included",
       description:
         "Series (one-dimensional) and dataframes (two-dimensional) for fast data exploration in Elixir",
       version: @version,
@@ -129,7 +129,7 @@ defmodule Explorer.MixProject do
         "GitHub" => @source_url,
         "Changelog" => "#{@source_url}/blob/v#{@version}/CHANGELOG.md"
       },
-      maintainers: ["Christopher Grainger", "Philip Sampaio", "José Valim"]
+      maintainers: ["Thomas Rodriguez"]
     ]
   end
 end

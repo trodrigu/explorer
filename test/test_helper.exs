@@ -20,7 +20,7 @@ exclude =
 
       for node <- [node2, node3] do
         true = :erpc.call(node, :code, :set_path, [:code.get_path()])
-        {:ok, _} = :erpc.call(node, :application, :ensure_all_started, [:explorer])
+        {:ok, _} = :erpc.call(node, :application, :ensure_all_started, [:explorer_talib_included])
       end
 
       []
