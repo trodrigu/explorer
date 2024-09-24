@@ -2,7 +2,7 @@ defmodule Explorer.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/trodrigu/explorer_talib_included"
-  @version "0.10.0-dev"
+  @version "0.10.3-dev"
   @dev? String.ends_with?(@version, "-dev")
   @force_build? System.get_env("EXPLORER_BUILD") in ["1", "true"]
 
@@ -129,7 +129,8 @@ defmodule Explorer.MixProject do
         "GitHub" => @source_url,
         "Changelog" => "#{@source_url}/blob/v#{@version}/CHANGELOG.md"
       },
-      maintainers: ["Thomas Rodriguez"]
+      maintainers: ["Thomas Rodriguez"],
+      exclude_patterns: ["_build", "deps", "priv", "test", "notebooks", "doc", "native/explorer/target"]
     ]
   end
 end
